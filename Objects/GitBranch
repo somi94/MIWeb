@@ -1,0 +1,229 @@
+<?php
+namespace MIWeb\Git\Objects;
+
+class GitBranch extends GitNode {
+    /*
+     * current checked out branch
+     *
+     * @var bool
+     *
+    protected $isCurrent = false;*/
+	
+    /**
+     * branch comment
+     *
+     * @var string
+     */
+    protected $comment;
+	
+    /**
+     * the full branch reference
+     *
+     * @var string
+     */
+    protected $fullRef;
+	
+    /**
+     * Class constructor
+     *
+     * @param string                  $name       branch name
+     *
+     * @throws \RuntimeException
+     * @throws \InvalidArgumentException
+     */
+    public function __construct($name) {
+        $this->name = trim($name);
+        $this->fullRef = 'refs/heads/' . $this->name;
+        //$this->createFromCommand();
+    }
+	
+    /**
+     * toString magic method
+     *
+     * @return string the sha
+     */
+    public function __toString()
+    {
+        return $this->getSha();
+    }
+	
+    /**
+     * comment setter
+     *
+     * @param string $comment the branch comment
+     */
+    public function setComment($comment) {
+        $this->comment = $comment;
+    }
+	
+    /**
+     * comment getter
+     *
+     * @return string
+     */
+    public function getComment() {
+        return $this->comment;
+    }
+	
+    /**
+     * fullref setter
+     *
+     * @param string $fullRef full git reference of the branch
+     */
+    public function setFullRef($fullRef) {
+        $this->fullRef = $fullRef;
+    }
+	
+    /**
+     * fullRef getter
+     *
+     * @return string
+     */
+    public function getFullRef() {
+        return $this->fullRef;
+    }
+	
+	/*
+	 * is branch active?
+	 *
+	 * @return bool
+	 *
+	public function isCurrent() {
+		return $this->isCurrent;
+	}
+	
+	/*
+	 * is branch active?
+	 *
+	 * @param bool $isCurrent
+	 *
+	public function setIsCurrent($isCurrent) {
+		$this->isCurrent = $isCurrent;
+	}
+	
+    /*
+     * static generator to generate a single commit from output of command.show service
+     *
+     * @param \GitElephant\Repository $repository repository
+     * @param string                  $outputLine output line
+     *
+     * @throws \InvalidArgumentException
+     * @return Branch
+     *
+    public static function createFromOutputLine($outputLine) {
+        $node = GitNode::createFromOutputLine($outputLine);
+		$node = (GitBranch)$node;
+		if($outputLine[0] == '*') {
+			$node->setIsCurrent(true);
+		}
+		return $node;
+    }*/
+	
+    /*
+     * Creates a new branch on the repository and returns it
+     *
+     * @param \GitElephant\Repository $repository repository instance
+     * @param string                  $name       branch name
+     * @param string                  $startPoint branch to start from
+     *
+     * @throws \RuntimeException
+     * @throws \Symfony\Component\Process\Exception\LogicException
+     * @throws \Symfony\Component\Process\Exception\InvalidArgumentException
+     * @throws \Symfony\Component\Process\Exception\RuntimeException
+     * @return \GitElephant\Objects\Branch
+     *
+    public static function create(Repository $repository, $name, $startPoint = null)
+    {
+        $repository->getCaller()->execute(BranchCommand::getInstance($repository)->create($name, $startPoint));
+        return new self($repository, $name);
+    }
+	
+    /*
+     * static generator to generate a single commit from output of command.show service
+     *
+     * @param \GitElephant\Repository $repository repository
+     * @param string                  $outputLine output line
+     *
+     * @throws \InvalidArgumentException
+     * @return Branch
+     *
+    public static function createFromOutputLine(Repository $repository, $outputLine) {
+        $matches = static::getMatches($outputLine);
+        $branch = new self($repository, $matches[1]);
+        $branch->parseOutputLine($outputLine);
+        return $branch;
+    }
+	
+    /*
+     * @param \GitElephant\Repository $repository repository instance
+     * @param string|TreeishInterface $name       branch name
+     * @param bool                    $create     like checkout -b, create a branch and check it out
+     *
+     * @throws \RuntimeException
+     * @throws \Symfony\Component\Process\Exception\RuntimeException
+     * @return Branch
+     *
+    public static function checkout(Repository $repository, $name, $create = false) {
+        if ($create) {
+            $branch = self::create($repository, $name);
+        } else {
+            $branch = new self($repository, $name);
+        }
+        $repository->checkout($branch);
+        return $branch;
+    }
+	
+    /*
+     * get the branch properties from command
+     *
+     * @throws \InvalidArgumentException
+     *
+    protected function createFromCommand() {
+        $command = BranchCommand::getInstance($this->getRepository())->listBranches();
+        $outputLines = $this->repository->getCaller()->execute($command)->getOutputLines(true);
+        foreach ($outputLines as $outputLine) {
+            $matches = static::getMatches($outputLine);
+            if ($this->name === $matches[1]) {
+                $this->parseOutputLine($outputLine);
+                return;
+            }
+        }
+        throw new InvalidBranchNameException(sprintf('The %s branch doesn\'t exists', $this->name));
+    }
+	
+    /*
+     * parse an output line from the BranchCommand::singleInfo command
+     *
+     * @param string $branchString an output line for a branch
+     * @throws \InvalidArgumentException
+     *
+    public function parseOutputLine($branchString) {
+        if (preg_match('/^\* (.*)/', $branchString, $matches)) {
+            $this->current = true;
+            $branchString = substr($branchString, 2);
+        } else {
+            $branchString = trim($branchString);
+        }
+        $matches = static::getMatches($branchString);
+        $this->name = $matches[1];
+        $this->sha = $matches[2];
+        $this->comment = $matches[3];
+    }
+	
+    /*
+     * get the matches from an output line
+     *
+     * @param string $branchString branch line output
+     *
+     * @throws \InvalidArgumentException
+     * @return array
+     *
+    public static function getMatches($branchString) {
+        $matches = array();
+        preg_match('/^\*?\ *?(\S+)\ +(\S{40})\ +(.+)$/', trim($branchString), $matches);
+        if (!count($matches)) {
+            throw new \InvalidArgumentException(sprintf('the branch string is not valid: %s', $branchString));
+        }
+        return array_map('trim', $matches);
+    }*/
+}
