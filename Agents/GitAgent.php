@@ -1,5 +1,5 @@
 <?php
-namespace MIWeb\Agents\Git;
+namespace MIWeb\Git\Agents;
 
 class GitAgent implements GitAgentInterface {
     /**
